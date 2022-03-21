@@ -22,6 +22,7 @@ RSpec.describe User, type: :model do
   def create_a_user(email: "#{SecureRandom.hex(4)}@example.org")
     User.create!(
       first_name: "Adam",
+      last_name: "Schiff",
       email: email,
       username: SecureRandom.hex(4),
       )
