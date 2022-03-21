@@ -28,16 +28,56 @@ RSpec.describe User, type: :model do
   end
   describe "#valid?" do
     it "is valid when email is unique" do
-      create_a_user
-      user = User.new
-      user.email = "bruh@seznam.cz"
-      expect(user.valid?).to be true
+      user1 = create_a_user
+      user2 = create_a_user
+
+      expect(user2.email).not_to be user1.email
+      expect(user2).to be_valid
     end
     it "is invalid if the email is taken" do
       create_a_user(email: "bruh@seznam.cz")
       user = User.new
       user.email = "bruh@seznam.cz"
       expect(user).not_to be_valid
+    end
+    it "is invalid if the username is taken" do
+      user = create(:user)
+      another_user = create(:user)
+
+      expect(another_user).to be_valid
+      another_user.username = user.username
+      expect(another_user).not_to be_valid
+    end
+    it "is invalid if user's first name is blank" do
+      user = create_a_user
+      expect(user).to be_valid
+      user.first_name = ""
+      expect(user).not_to be_valid
+      user.first_name = nil
+      expect(user).not_to be_valid
+    end
+    it "is invalid if the email looks bad" do
+      user = create_a_user
+      expect(user).to be_valid
+
+      user.email = ""
+      expect(user).to be_invalid
+
+      user.email = "foo.bar"
+      expect(user).to be_invalid
+
+      user.email = "foo.bar#example.com"
+      expect(user).to be_invalid
+
+      user.email = "f.o.o.b.a.r@example.com"
+      expect(user).to be_valid
+
+      user.email = "foo+bar@example.com"
+      expect(user).to be_valid
+
+      user.email = "foo.bar@sub.example.co.id"
+      expect(user).to be_valid
+
     end
   end
 end

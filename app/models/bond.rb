@@ -19,4 +19,12 @@
 #  fk_rails_...  (user_id => users.id)
 #
 class Bond < ApplicationRecord
+  STATES = [
+    REQUESTIONG = "requesting",
+    FOLLOWING = "following",
+    BLOCKING = "blocking",
+  ].freeze
+
+  validates :state, inclusion: { in: STATES }
+
 end
