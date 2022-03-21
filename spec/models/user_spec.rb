@@ -19,5 +19,25 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  def create_a_user(email: "#{SecureRandom.hex(4)}@example.org")
+    User.create!(
+      first_name: "Adam",
+      email: email,
+      username: SecureRandom.hex(4),
+      )
+  end
+  describe "#valid?" do
+    it "is valid when email is unique" do
+      create_a_user
+      user = User.new
+      user.email = "bruh@seznam.cz"
+      expect(user.valid?).to be true
+    end
+    it "is invalid if the email is taken" do
+      create_a_user(email: "bruh@seznam.cz")
+      user = User.new
+      user.email = "bruh@seznam.cz"
+      expect(user).not_to be_valid
+    end
+  end
 end
